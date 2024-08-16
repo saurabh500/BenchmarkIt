@@ -3,8 +3,13 @@
 using BenchmarkDotNet.Attributes;
 using System.Buffers.Binary;
 
-namespace Benchmarks.BufferedReader
+namespace Benchmarks.BufferedReaderBenchmarks
 {
+    [MemoryDiagnoser]
+    [AsciiDocExporter]
+    [CsvExporter]
+    [MarkdownExporterAttribute.Default]
+    [MarkdownExporterAttribute.GitHub]
     public class BufferedAsyncReadBenchamarks
     {
         private const string FilePath = "Z:\\dev\\urandom";

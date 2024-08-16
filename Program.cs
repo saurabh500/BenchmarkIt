@@ -1,6 +1,7 @@
 
 using BenchmarkDotNet.Running;
-using Benchmarks.BufferedReader;
+using Benchmarks.BufferedReaderBenchmarks;
+using Benchmarks.MemoryStreamAsync;
 
 namespace Benchmarks
 {
@@ -8,7 +9,7 @@ namespace Benchmarks
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<BufferedAsyncReadBenchamarks>();
+            var summary = BenchmarkRunner.Run<MemoryStreamAsyncReadBenchmarks>();
             Console.WriteLine(summary);
         }
     }

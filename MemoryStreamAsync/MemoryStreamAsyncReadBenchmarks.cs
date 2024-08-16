@@ -1,17 +1,32 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿
+
+using BenchmarkDotNet.Attributes;
 using System.Buffers.Binary;
 
-namespace Benchmarks.RawFileRead
+namespace Benchmarks.MemoryStreamAsync
 {
-    public class FileReadBenchmarks
+    [MemoryDiagnoser]
+    [AsciiDocExporter]
+    [CsvExporter]
+    [MarkdownExporterAttribute.Default]
+    [MarkdownExporterAttribute.GitHub]
+    public class MemoryStreamAsyncReadBenchmarks
     {
-        private const string FilePath = "Z:\\dev\\urandom";
         private const int BufferSize = 512;
+        byte[] _buffer = new byte[BufferSize];
+
+        public MemoryStreamAsyncReadBenchmarks()
+        {
+            for (int i = 0; i < BufferSize; i++)
+            {
+                _buffer[i] = (byte)i;
+            }
+        }
 
         [Benchmark]
         public async Task ReadInChunksAsync()
         {
-            using (var stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read, BufferSize, useAsync: true))
+            using (var stream = new MemoryStream(_buffer))
             {
                 byte[] buffer = new byte[BufferSize];
                 int bytesRead = await stream.ReadAsync(buffer, 0, BufferSize);
@@ -26,7 +41,7 @@ namespace Benchmarks.RawFileRead
         [Benchmark]
         public async Task ReadInt32ValuesAsync()
         {
-            using (var stream = new FileStream(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read, sizeof(int), useAsync: true))
+            using (var stream = new MemoryStream(_buffer))
             {
                 byte[] buffer = new byte[sizeof(int)];
                 int totalBytesRead = 0;
