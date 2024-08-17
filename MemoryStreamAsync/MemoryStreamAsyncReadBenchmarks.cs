@@ -15,9 +15,6 @@ namespace Benchmarks.MemoryStreamAsync
         private const int BufferSize = 512;
         byte[] _buffer = new byte[BufferSize];
 
-        [Params(0, 3, 5, 9)]
-        public int Depth { get; set; }
-
         public MemoryStreamAsyncReadBenchmarks()
         {
             for (int i = 0; i < BufferSize; i++)
@@ -42,16 +39,21 @@ namespace Benchmarks.MemoryStreamAsync
         }
 
         [Benchmark]
-        public async Task ReadWithDepth()
+        [Arguments(0)]
+        [Arguments(3)]
+        [Arguments(5)]
+        [Arguments(9)]
+        [Arguments(15)]
+        public async Task ReadWithDepth(int depth)
         {
-            await TerminateOn(0);
+            await TerminateOn(0, depth);
         }
 
-        private async Task TerminateOn(int currentDepth)
+        private async Task TerminateOn(int currentDepth, int depth)
         {
-            if (currentDepth != Depth)
+            if (currentDepth < depth)
             {
-                await TerminateOn(currentDepth++);
+                await TerminateOn(currentDepth+1, depth);
             }
             else
             {
