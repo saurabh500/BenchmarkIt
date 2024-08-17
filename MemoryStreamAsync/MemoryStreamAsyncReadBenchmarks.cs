@@ -15,6 +15,8 @@ namespace Benchmarks.MemoryStreamAsync
         private const int BufferSize = 512;
         byte[] _buffer = new byte[BufferSize];
 
+        [ParamsAllValues]
+        public bool UseLargeChunks { get; set; }
         public MemoryStreamAsyncReadBenchmarks()
         {
             for (int i = 0; i < BufferSize; i++)
@@ -23,7 +25,7 @@ namespace Benchmarks.MemoryStreamAsync
             }
         }
 
-        [Benchmark]
+        //[Benchmark]
         public async Task ReadInChunksAsync()
         {
             using (var stream = new MemoryStream(_buffer))
@@ -46,22 +48,25 @@ namespace Benchmarks.MemoryStreamAsync
         [Arguments(15)]
         public async Task ReadWithDepth(int depth)
         {
-            await TerminateOn(0, depth);
+            await TerminateOn(0, depth, UseLargeChunks);
         }
 
-        private async Task TerminateOn(int currentDepth, int depth)
+        private async Task TerminateOn(int currentDepth, int depth, bool useLargeChunks)
         {
             if (currentDepth < depth)
             {
-                await TerminateOn(currentDepth+1, depth);
+                await TerminateOn(currentDepth+1, depth, useLargeChunks);
             }
             else
             {
-                await ReadInChunksAsync();
+                if (useLargeChunks)
+                    await ReadInChunksAsync();
+                else 
+                    await ReadInt32ValuesAsync();
             }
         }
 
-        [Benchmark]
+        //[Benchmark]
         public async Task ReadInt32ValuesAsync()
         {
             using (var stream = new MemoryStream(_buffer))
