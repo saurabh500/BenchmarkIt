@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 using Benchmarks.BufferedReaderBenchmarks;
+using Benchmarks.InliningBenchmark;
 using Benchmarks.MemoryStreamAsync;
 
 namespace Benchmarks
@@ -13,7 +14,7 @@ namespace Benchmarks
 #if DEBUG
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
 #else
-            var summary = BenchmarkRunner.Run<MemoryStreamAsyncReadBenchmarks>();
+            var summary = BenchmarkRunner.Run<MemoryStreamAsync.MemoryStreamAsyncReadBenchmarks>();
             Console.WriteLine(summary);
 #endif
         }
