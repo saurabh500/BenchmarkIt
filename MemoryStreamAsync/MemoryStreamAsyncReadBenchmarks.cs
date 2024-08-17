@@ -40,6 +40,11 @@ namespace Benchmarks.MemoryStreamAsync
             }
         }
 
+        [Benchmark(Baseline =true)]
+        public async Task ReadWithDepth()
+        {
+            await TerminateOn(0, 0, UseLargeChunks);
+        }
         [Benchmark]
         [Arguments(0)]
         [Arguments(3)]
